@@ -1,0 +1,151 @@
+<html>
+
+<head>
+    <title>
+        How significant is your birthday?
+    </title>
+    <style>
+        body {
+            max-width: 620px;
+            margin: 10px auto;
+        }
+
+        #significance {
+            margin-top: 40px;
+        }
+
+        #explanation {
+            margin-top: 40px;
+        }
+
+        p {
+            color: #333;
+        }
+
+        h2 {
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+    </style>
+    <script type="text/javascript">
+        function toBaseN(number, base) {
+            let digits = [];
+            while (number > 0) {
+                digits.push(number % base);
+                number = Math.floor(number / base);
+            }
+            return digits;
+        }
+
+        function renderDigits(number, base) {
+            if (base <= 36) {
+                return number.toString(base);
+            }
+
+            let digits = toBaseN(number, base);
+            digits.reverse();
+            return digits.map((d) => d.toString(10)).join("&centerdot;");
+        }
+
+        function differentDigits(a, b) {
+            const l = Math.min(a.length, b.length);
+            let count = Math.max(a.length, b.length) - Math.min(a.length, b.length);
+
+            for (let i = 0; i < l; i++) {
+                if (a[i] !== b[i]) count++;
+            }
+
+            return count;
+        }
+
+        function significance(number) {
+            let result = {}
+
+            for (let base = 2; base <= number; base++) {
+                const currentDigits = toBaseN(number - 1, base);
+                const nextDigits = toBaseN(number, base);
+
+                result[base] = differentDigits(currentDigits, nextDigits);
+            }
+
+            return result;
+        }
+
+        function renderSignificance(age, significance) {
+            const target = document.querySelector('#significance');
+            const nextAge = age + 1;
+            const biggestSignificance = Object.values(significance).reduce((a, b) => Math.max(a, b), 0);
+
+            let biggestSignificanceBase = undefined;
+            let sortedKeys = Object.keys(significance).sort((a, b) => a - b);
+            for (base of sortedKeys) {
+                if (significance[base] == biggestSignificance) {
+                    biggestSignificanceBase = base;
+                    break;
+                }
+            }
+
+            const ageInBase = renderDigits(age, biggestSignificanceBase);
+            const nextAgeInBase = renderDigits(nextAge, biggestSignificanceBase);
+
+            let header =
+                `<p><strong>Your next birthday significance is 
+                ${biggestSignificance}!</strong></p>`
+            let calculation =
+                `<p>In base ${biggestSignificanceBase}, your current age ${age} is <b>${ageInBase}</b> 
+                and your age on your next birthday ${nextAge} is <b>${nextAgeInBase}</b>.</p>`;
+
+            let contents = [header, calculation];
+            target.innerHTML = contents.join("\n");
+        }
+
+        function whenChanged(input) {
+            const inputValue = parseInt(input.value, 10);
+            renderSignificance(inputValue - 1, significance(inputValue));
+        }
+
+        function onload() {
+            const input = document.querySelector('#birthday');
+            input.addEventListener("input", () => whenChanged(input));
+            whenChanged(input);
+        }
+
+        document.addEventListener("DOMContentLoaded", onload);
+    </script>
+</head>
+
+<body>
+    <h1>How significant is your birthday?</h1>
+    <p>What's your next birthday?
+        <input type="number" value="18" min="1" max="128" step="1" pattern="\d*" id="birthday">
+    </p>
+    <div id="significance"> </div>
+    <div id="explanation">
+        <h2>What's birthday significance?</h2>
+        <p>
+            Round birthdays, like 20, 30 or 50 feel important to many people. But why should we
+            give special privilege to round numbers in base 10 - what about all of the other bases?
+        </p>
+
+        <p>
+            <i>Def. </i> <strong>Birthday significance in base b</strong> is the number of digits
+            in base d which will be different when your age increses by 1 on your birthday. For example,
+            birthday significance of 19 at base 10 is <strong>1</strong> (because 18 and 19 differ by
+            one digit) but birthday significance of 20 at base 10 is <strong>2</strong> (because 19 and
+            20 differ by 2 digits).
+        </p>
+
+        <p><i>Def. </i><strong>Birthday significance</strong> is the maximum birthday significance at
+            any base.</p>
+
+        <h2>Note about number rendering</h2>
+        <p>
+            Bases up to and including 36 are rendered using latin alphabet for higher digits, e.g. A = 10,
+            B = 11, ..., Z = 35.
+
+            For higher bases, digits are rendered in base 10 and separated by "&centerdot;".
+        </p>
+    </div>
+</body>
+
+</html>
