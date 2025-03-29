@@ -91,8 +91,7 @@
             const nextAgeInBase = renderDigits(nextAge, biggestSignificanceBase);
 
             let header =
-                `<p><strong>Your next birthday significance is 
-                ${biggestSignificance}!</strong></p>`
+                `<p><strong>The significance of your next birthday is ${biggestSignificance}!</strong></p>`
             let calculation =
                 `<p>In base ${biggestSignificanceBase}, your current age ${age} is <b>${ageInBase}</b> 
                 and your age on your next birthday ${nextAge} is <b>${nextAgeInBase}</b>.</p>`;
@@ -125,13 +124,13 @@
     <div id="explanation">
         <h2>What's birthday significance?</h2>
         <p>
-            Round birthdays, like 20, 30 or 50 feel important to many people. But why should we
+            Round birthdays, like 20, 30 or 50, feel important to many people. But why should we
             give special privilege to round numbers in base 10 - what about all of the other bases?
         </p>
 
         <p>
             <i>Def. </i> <strong>Birthday significance in base b</strong> is the number of digits
-            in base d which will be different when your age increses by 1 on your birthday. For example,
+            in base b that change when your age increases by 1 on your birthday. For example,
             birthday significance of 19 at base 10 is <strong>1</strong> (because 18 and 19 differ by
             one digit) but birthday significance of 20 at base 10 is <strong>2</strong> (because 19 and
             20 differ by 2 digits).
