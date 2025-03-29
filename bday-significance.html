@@ -9,6 +9,7 @@
         body {
             max-width: 620px;
             margin: 10px auto;
+            padding: 0 10px;
         }
 
         #significance {
@@ -118,7 +119,7 @@
 <body>
     <h1>How significant is your birthday?</h1>
     <p>What's your next birthday?
-        <input type="number" value="18" min="1" max="128" step="1" pattern="\d*" id="birthday">
+        <input type="number" inputmode="numeric" value="18" min="1" max="128" step="1" pattern="\d*" id="birthday">
     </p>
     <div id="significance"> </div>
     <div id="explanation">
